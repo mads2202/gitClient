@@ -1,7 +1,8 @@
-package com.mads2202.gitclient
+package com.mads2202.gitclient.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.mads2202.gitclient.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
