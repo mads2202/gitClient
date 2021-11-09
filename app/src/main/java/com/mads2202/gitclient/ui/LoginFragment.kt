@@ -1,5 +1,6 @@
 package com.mads2202.gitclient.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,8 +11,11 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.mads2202.gitclient.R
 import com.mads2202.gitclient.databinding.LoginScreenFragmetBinding
+import com.mads2202.gitclient.preferences.PreferenceKeys.Companion.STORED_EMAIL_ADDRESS
+import com.mads2202.gitclient.preferences.PreferenceKeys.Companion.STORED_PASSWORD_ADDRESS
 import com.mads2202.gitclient.presenters.LoginContract
 import com.mads2202.gitclient.presenters.LoginPresenterImpl
+import com.mads2202.gitclient.util.APP_PREFERENCES
 
 class LoginFragment : Fragment(), LoginContract.View {
     var binding: LoginScreenFragmetBinding? = null
@@ -132,6 +136,18 @@ class LoginFragment : Fragment(), LoginContract.View {
             .beginTransaction()
             .replace(R.id.container, MainScreenFragment.newInstance())
             .commit()
+    }
+
+    override fun rememberCredentials(email: String, password: String) {
+
+        binding?.let{binding->
+            requireActivity().getSharedPreferences(APP_PREFERENCES,Context.MODE_PRIVATE)
+                .edit()
+                .putString(STORED_EMAIL_ADDRESS,binding.loginInputEditText.text.toString())
+                .putString(STORED_PASSWORD_ADDRESS,binding.passwordInputEditText.text.toString())
+                .apply()
+        }
+
     }
 
     override fun onDestroy() {

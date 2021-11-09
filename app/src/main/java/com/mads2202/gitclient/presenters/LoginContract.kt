@@ -13,6 +13,8 @@ class LoginContract {
 
         fun openMainScreen()
 
+        fun rememberCredentials(email: String,password:String)
+
     }
 
     interface LoginPresenter {

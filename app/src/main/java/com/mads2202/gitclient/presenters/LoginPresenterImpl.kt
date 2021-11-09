@@ -34,7 +34,9 @@ class LoginPresenterImpl : LoginPresenter {
 
     override fun onLogin(email: String, password: String) {
         if (isValidCredentials(email, password)) {
+            view?.rememberCredentials(email,password)
             view?.openMainScreen()
+            view?.setState(ViewState.SUCCESS)
         }
         view?.setState(ViewState.ERROR)
     }
