@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.mads2202.gitclient.R
 
-class ForgotPasswordFragment : Fragment() {
+class SignupFragment : Fragment() {
     companion object {
-        fun newInstance(): ForgotPasswordFragment {
+        fun newInstance(): SignupFragment {
             val args = Bundle()
-            val fragment = ForgotPasswordFragment()
+            val fragment = SignupFragment()
             fragment.arguments = args
             return fragment
         }
@@ -22,7 +22,7 @@ class ForgotPasswordFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.retrieve_password_screen_layout, container, false)
+        val view = inflater.inflate(R.layout.sing_up_screen_layout, container, false)
         return view
     }
 }

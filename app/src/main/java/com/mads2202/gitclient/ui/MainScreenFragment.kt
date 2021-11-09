@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.mads2202.gitclient.R
 
-class SingupFragment : Fragment() {
-    companion object {
-        fun newInstance(): SingupFragment {
+class MainScreenFragment: Fragment() {
+    companion object{
+        fun newInstance():MainScreenFragment {
             val args = Bundle()
-            val fragment = SingupFragment()
+            val fragment = MainScreenFragment()
             fragment.arguments = args
             return fragment
         }
@@ -22,7 +22,7 @@ class SingupFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.sing_up_screen_layout, container, false)
-        return super.onCreateView(inflater, container, savedInstanceState)
+        val view= inflater.inflate(R.layout.main_screen_layout,container,false)
+        return view
     }
 }
