@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/git_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_git_128"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/email_input_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/big_margin"
+        app:layout_constraintEnd_toEndOf="@id/end_margin_guideline"
+        app:layout_constraintStart_toStartOf="@id/start_margin_guideline"
+        app:layout_constraintTop_toBottomOf="@id/git_image_view">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/enter_your_email"
+            android:inputType="textEmailAddress"
+            app:layout_constrainedWidth="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/password_input_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/small_margin"
+        app:layout_constraintEnd_toEndOf="@id/end_margin_guideline"
+        app:layout_constraintStart_toStartOf="@id/start_margin_guideline"
+        app:layout_constraintTop_toBottomOf="@id/email_input_layout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/enter_your_password"
+            android:inputType="textPassword"
+            app:layout_constrainedWidth="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/nickname_input_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/small_margin"
+        app:layout_constraintEnd_toEndOf="@id/end_margin_guideline"
+        app:layout_constraintStart_toStartOf="@id/start_margin_guideline"
+        app:layout_constraintTop_toBottomOf="@id/password_input_layout">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/enter_your_password"
+            android:inputType="textPassword"
+            app:layout_constrainedWidth="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/small_margin"
+        android:text="@string/singup"
+        android:theme="@style/buttonStyle"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toEndOf="@id/end_margin_guideline"
+        app:layout_constraintStart_toStartOf="@id/start_margin_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/nickname_input_layout" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/start_margin_guideline"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/medium_margin" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/end_margin_guideline"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/medium_margin" />
+</androidx.constraintlayout.widget.ConstraintLayout>

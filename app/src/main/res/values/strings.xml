@@ -6,4 +6,6 @@
     <string name="singup">Signup</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="remember_me">Remember me</string>
+    <string name="enter_your_email_to_get_new_password">Enter your email to get new password</string>
+    <string name="reset_password">Reset password</string>
 </resources>
