@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">gitClient</string>
+    <string name="enter_your_email">Enter your email</string>
+    <string name="enter_your_password">Enter your password</string>
+    <string name="login">Login</string>
+    <string name="singup">Signup</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="remember_me">Remember me</string>
+    <string name="enter_your_email_to_get_new_password">Enter your email to get new password</string>
+    <string name="reset_password">Reset password</string>
+    <string name="wrong_email_format_error">Wrong email format</string>
+    <string name="wrong_password_format_error">Wrong password format</string>
+    <string name="something_wrong_error">Something wrong</string>
 </resources>
