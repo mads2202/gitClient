@@ -1,8 +1,10 @@
 package com.mads2202.gitclient.presenters
 
+import com.github.terrakok.cicerone.Router
 import com.mads2202.gitclient.domen.GitUser
 import com.mads2202.gitclient.domen.GitUserDao
 import com.mads2202.gitclient.presenters.LoginContract.*
+import com.mads2202.gitclient.ui.Screens
 import com.mads2202.gitclient.ui.ViewState
 import com.mads2202.gitclient.util.regExMailPattern
 import com.mads2202.gitclient.util.regExPasswordPattern
@@ -10,35 +12,27 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 
-class LoginPresenterImpl : LoginPresenter {
-    var view: View? = null
-    override fun onAttach(view: View) {
-        this.view = view
-    }
+class LoginPresenterImpl(val router: Router) : LoginPresenter() {
 
     override fun validateEmail(email: String) {
         if (!isValidString(Pattern.compile(regExMailPattern), email)) {
-            view?.setState(ViewState.MAIL_ERROR)
+            viewState.setState(ViewState.MAIL_ERROR)
         }
     }
 
     override fun validatePassword(password: String) {
         if (!isValidString(Pattern.compile(regExPasswordPattern), password)) {
-            view?.setState(ViewState.PASSWORD_ERROR)
+            viewState.setState(ViewState.PASSWORD_ERROR)
         }
-    }
-
-    override fun onDetach() {
-        view = null
     }
 
     override fun onLogin(email: String, password: String) {
         if (isValidCredentials(email, password)) {
-            view?.rememberCredentials(email,password)
-            view?.openMainScreen()
-            view?.setState(ViewState.SUCCESS)
+            viewState.rememberCredentials(email,password)
+            router.navigateTo(Screens.openMainScreen())
+            viewState.setState(ViewState.SUCCESS)
         }
-        view?.setState(ViewState.ERROR)
+        viewState.setState(ViewState.ERROR)
     }
 
     private fun isValidCredentials(email: String, password: String): Boolean {
@@ -53,11 +47,11 @@ class LoginPresenterImpl : LoginPresenter {
     }
 
     override fun onForgetPassword() {
-        view?.openForgotPasswordScreen()
+        router.navigateTo(Screens.openForgotPasswordScreen())
     }
 
     override fun onSingUp() {
-        view?.openSingUpScreen()
+        router.navigateTo(Screens.openForgotPasswordScreen())
     }
 
     private fun isValidString(pattern: Pattern, str: String): Boolean {

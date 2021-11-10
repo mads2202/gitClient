@@ -7,7 +7,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+
 import com.google.android.material.snackbar.Snackbar
 import com.mads2202.gitclient.R
 import com.mads2202.gitclient.databinding.LoginScreenFragmetBinding
@@ -16,10 +16,13 @@ import com.mads2202.gitclient.preferences.PreferenceKeys.Companion.STORED_PASSWO
 import com.mads2202.gitclient.presenters.LoginContract
 import com.mads2202.gitclient.presenters.LoginPresenterImpl
 import com.mads2202.gitclient.util.APP_PREFERENCES
+import com.mads2202.gitclient.util.app
+import moxy.MvpAppCompatFragment
+import moxy.ktx.moxyPresenter
 
-class LoginFragment : Fragment(), LoginContract.View {
+class LoginFragment : MvpAppCompatFragment(), LoginContract.View {
     var binding: LoginScreenFragmetBinding? = null
-    var presenter: LoginPresenterImpl = LoginPresenterImpl()
+    val presenter by moxyPresenter { LoginPresenterImpl(requireContext().app.router)}
 
     companion object {
         fun newInstance(): LoginFragment {
@@ -37,7 +40,6 @@ class LoginFragment : Fragment(), LoginContract.View {
     ): View? {
         val view = inflater.inflate(R.layout.login_screen_fragmet, container, false)
         binding = LoginScreenFragmetBinding.bind(view)
-        presenter.onAttach(this)
         setUpOnClickListeners()
         return view
     }
@@ -117,27 +119,6 @@ class LoginFragment : Fragment(), LoginContract.View {
 
     }
 
-    override fun openSingUpScreen() {
-        parentFragmentManager
-            .beginTransaction()
-            .replace(R.id.container, SignupFragment.newInstance())
-            .commit()
-    }
-
-    override fun openForgotPasswordScreen() {
-        parentFragmentManager
-            .beginTransaction()
-            .replace(R.id.container, ForgotPasswordFragment.newInstance())
-            .commit()
-    }
-
-    override fun openMainScreen() {
-        parentFragmentManager
-            .beginTransaction()
-            .replace(R.id.container, MainScreenFragment.newInstance())
-            .commit()
-    }
-
     override fun rememberCredentials(email: String, password: String) {
 
         binding?.let{binding->
@@ -149,11 +130,4 @@ class LoginFragment : Fragment(), LoginContract.View {
         }
 
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        binding = null
-        presenter.onDetach()
-    }
-
 }

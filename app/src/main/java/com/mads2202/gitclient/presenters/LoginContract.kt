@@ -1,36 +1,31 @@
 package com.mads2202.gitclient.presenters
 
 import com.mads2202.gitclient.ui.ViewState
+import moxy.MvpPresenter
+import moxy.MvpView
+import moxy.viewstate.strategy.alias.AddToEndSingle
+import moxy.viewstate.strategy.alias.Skip
 
 class LoginContract {
-    interface View {
-
+    interface View : MvpView {
+        @AddToEndSingle
         fun setState(state: ViewState)
 
-        fun openSingUpScreen()
-
-        fun openForgotPasswordScreen()
-
-        fun openMainScreen()
-
-        fun rememberCredentials(email: String,password:String)
+        @Skip
+        fun rememberCredentials(email: String, password: String)
 
     }
 
-    interface LoginPresenter {
+    abstract class LoginPresenter : MvpPresenter<View>() {
 
-        fun onAttach(view: View)
+        abstract fun validateEmail(email: String)
 
-        fun validateEmail(email: String)
+        abstract fun validatePassword(password: String)
 
-        fun validatePassword(password: String)
+        abstract fun onLogin(email: String, password: String)
 
-        fun onDetach()
+        abstract fun onForgetPassword()
 
-        fun onLogin(email: String, password: String)
-
-        fun onForgetPassword()
-
-        fun onSingUp()
+        abstract fun onSingUp()
     }
 }
