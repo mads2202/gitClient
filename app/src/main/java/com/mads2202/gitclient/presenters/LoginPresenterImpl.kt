@@ -2,7 +2,6 @@ package com.mads2202.gitclient.presenters
 
 import com.github.terrakok.cicerone.Router
 import com.mads2202.gitclient.domen.GitUser
-import com.mads2202.gitclient.domen.GitUserDao
 import com.mads2202.gitclient.presenters.LoginContract.*
 import com.mads2202.gitclient.ui.Screens
 import com.mads2202.gitclient.ui.ViewState
