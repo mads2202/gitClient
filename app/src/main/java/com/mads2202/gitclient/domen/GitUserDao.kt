@@ -1,8 +1,10 @@
 package com.mads2202.gitclient.domen
 
+import io.reactivex.Observable
+
 interface GitUserDao {
 
-    fun getUser():GitUser
+    fun getUsers():Observable<List<GitUser>>
 
     fun addUser(user:GitUser)
 }
