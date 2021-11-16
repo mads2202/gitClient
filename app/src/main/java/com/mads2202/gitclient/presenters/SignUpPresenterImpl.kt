@@ -1,9 +1,9 @@
 package com.mads2202.gitclient.presenters
 
 import com.github.terrakok.cicerone.Router
+import com.mads2202.gitclient.domen.GitUser
 import com.mads2202.gitclient.domen.GitUserDao
 import com.mads2202.gitclient.domen.GitUserDaoImpl
-import com.mads2202.gitclient.presenters.LoginContract.*
 import com.mads2202.gitclient.ui.Screens
 import com.mads2202.gitclient.ui.ViewState
 import com.mads2202.gitclient.util.isValidString
@@ -13,10 +13,10 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import java.util.regex.Pattern
 
-
-class LoginPresenterImpl(val router: Router) : LoginPresenter() {
+class SignUpPresenterImpl(val router: Router) : SignUpContract.SignUpPresenter() {
     lateinit var compositeDisposable: CompositeDisposable
     private val userRepo: GitUserDao = GitUserDaoImpl()
+
     override fun onFirstViewAttach() {
         compositeDisposable = CompositeDisposable()
         super.onFirstViewAttach()
@@ -39,35 +39,43 @@ class LoginPresenterImpl(val router: Router) : LoginPresenter() {
         }
     }
 
-    override fun onLogin(email: String, password: String) {
-        if (isValidCredentials(email, password)) {
-            viewState.rememberCredentials(email, password)
-            router.navigateTo(Screens.openMainScreen())
-            viewState.setState(ViewState.SUCCESS)
-        }
-        viewState.setState(ViewState.ERROR)
-    }
-
-    private fun isValidCredentials(email: String, password: String): Boolean {
-
-        var isValid = false
+    private fun isNewMail(mail: String): Boolean {
+        var isNew = true
         compositeDisposable.add(
             userRepo.getUsers()
                 .flatMap { users -> Observable.fromIterable(users) }
-                .filter { user -> user.email == email }
+                .skipWhile { user -> user.email != mail }
                 .subscribe { user ->
-                    isValid = user.password == password
+                    isNew = false
                 })
-        return isValid
+        return isNew
+
     }
 
-    override fun onForgetPassword() {
-        router.navigateTo(Screens.openForgotPasswordScreen())
+    private fun isNewNickname(nickName: String): Boolean {
+        var isNew = true
+        compositeDisposable.add(
+            userRepo.getUsers()
+                .flatMap { users -> Observable.fromIterable(users) }
+                .skipWhile { user -> user.nickname != nickName }
+                .subscribe { user ->
+                    isNew = false
+                })
+        return isNew
+
     }
 
-    override fun onSingUp() {
-        router.navigateTo(Screens.openSignUpScreen())
+    override fun onSingUp(mail: String, password: String, nickName: String) {
+        if (isNewMail(mail)) {
+            if (isNewNickname(nickName)) {
+                userRepo.addUser(GitUser(mail, password, nickName))
+                router.navigateTo(Screens.openLoginScreen())
+            } else {
+                viewState.setState(ViewState.NICKNAME_ERROR)
+            }
+        } else {
+            viewState.setState(ViewState.MAIL_ERROR)
+        }
+
     }
-
-
 }
