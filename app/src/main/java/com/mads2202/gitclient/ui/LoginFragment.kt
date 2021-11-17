@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import com.google.android.material.snackbar.Snackbar
 import com.mads2202.gitclient.R
 import com.mads2202.gitclient.databinding.LoginScreenFragmetBinding
+import com.mads2202.gitclient.eventBus.LoginEvent
 import com.mads2202.gitclient.preferences.PreferenceKeys.Companion.STORED_EMAIL_ADDRESS
 import com.mads2202.gitclient.preferences.PreferenceKeys.Companion.STORED_PASSWORD_ADDRESS
 import com.mads2202.gitclient.presenters.LoginContract
@@ -42,6 +43,11 @@ class LoginFragment : MvpAppCompatFragment(), LoginContract.View {
         binding = LoginScreenFragmetBinding.bind(view)
         setUpOnClickListeners()
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        requireContext().app.eventBus.post(LoginEvent())
     }
 
     override fun setState(viewState: ViewState) {
