@@ -1,5 +1,6 @@
 package com.mads2202.gitclient.presenters
 
+import android.util.Log
 import com.github.terrakok.cicerone.Router
 import com.mads2202.gitclient.domen.GitUser
 import com.mads2202.gitclient.domen.GitUserDao
@@ -10,7 +11,9 @@ import com.mads2202.gitclient.util.isValidString
 import com.mads2202.gitclient.util.regExMailPattern
 import com.mads2202.gitclient.util.regExPasswordPattern
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 
 class SignUpPresenterImpl(val router: Router) : SignUpContract.SignUpPresenter() {
@@ -39,43 +42,25 @@ class SignUpPresenterImpl(val router: Router) : SignUpContract.SignUpPresenter()
         }
     }
 
-    private fun isNewMail(mail: String): Boolean {
-        var isNew = true
-        compositeDisposable.add(
-            userRepo.getUsers()
-                .flatMap { users -> Observable.fromIterable(users) }
-                .skipWhile { user -> user.email != mail }
-                .subscribe { user ->
-                    isNew = false
-                })
-        return isNew
-
-    }
-
-    private fun isNewNickname(nickName: String): Boolean {
-        var isNew = true
-        compositeDisposable.add(
-            userRepo.getUsers()
-                .flatMap { users -> Observable.fromIterable(users) }
-                .skipWhile { user -> user.nickname != nickName }
-                .subscribe { user ->
-                    isNew = false
-                })
-        return isNew
-
-    }
-
     override fun onSingUp(mail: String, password: String, nickName: String) {
-        if (isNewMail(mail)) {
-            if (isNewNickname(nickName)) {
-                userRepo.addUser(GitUser(mail, password, nickName))
-                router.navigateTo(Screens.openLoginScreen())
-            } else {
-                viewState.setState(ViewState.NICKNAME_ERROR)
-            }
-        } else {
-            viewState.setState(ViewState.MAIL_ERROR)
-        }
-
+        compositeDisposable.add(
+            userRepo.getUsers()
+                .delay(3, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe( { users ->
+                    users.forEach {
+                        if (it.email == mail) {
+                            viewState.setState(ViewState.MAIL_ERROR)
+                            return@subscribe
+                        } else if (it.nickname == nickName) {
+                            viewState.setState(ViewState.NICKNAME_ERROR)
+                            return@subscribe
+                        }
+                        userRepo.addUser(GitUser(mail, password, nickName))
+                        router.navigateTo(Screens.openLoginScreen())
+                    }
+                },{
+                    Log.d("@@@",it.stackTrace.toString())
+                }))
     }
 }
