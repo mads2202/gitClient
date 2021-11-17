@@ -10,7 +10,9 @@ import com.mads2202.gitclient.util.isValidString
 import com.mads2202.gitclient.util.regExMailPattern
 import com.mads2202.gitclient.util.regExPasswordPattern
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 
 
@@ -40,25 +42,23 @@ class LoginPresenterImpl(val router: Router) : LoginPresenter() {
     }
 
     override fun onLogin(email: String, password: String) {
-        if (isValidCredentials(email, password)) {
-            viewState.rememberCredentials(email, password)
-            router.navigateTo(Screens.openMainScreen())
-            viewState.setState(ViewState.SUCCESS)
-        }
-        viewState.setState(ViewState.ERROR)
-    }
-
-    private fun isValidCredentials(email: String, password: String): Boolean {
-
-        var isValid = false
         compositeDisposable.add(
             userRepo.getUsers()
+                .delay(
+                    3,
+                    TimeUnit.SECONDS
+                ) // не совсем понимаю что занчаит имитировать задержку из 2 задания, поэтому решил что значения будут приходить с задержкой тут
                 .flatMap { users -> Observable.fromIterable(users) }
                 .filter { user -> user.email == email }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { user ->
-                    isValid = user.password == password
+                    if (user.password == password) {
+                        viewState.rememberCredentials(email, password)
+                        router.navigateTo(Screens.openMainScreen())
+                        viewState.setState(ViewState.SUCCESS)
+                    }
                 })
-        return isValid
+        viewState.setState(ViewState.ERROR)
     }
 
     override fun onForgetPassword() {
