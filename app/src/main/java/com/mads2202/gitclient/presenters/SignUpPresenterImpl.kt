@@ -43,24 +43,5 @@ class SignUpPresenterImpl(val router: Router) : SignUpContract.SignUpPresenter()
     }
 
     override fun onSingUp(mail: String, password: String, nickName: String) {
-        compositeDisposable.add(
-            userRepo.getUsers()
-                .delay(3, TimeUnit.SECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe( { users ->
-                    users.forEach {
-                        if (it.email == mail) {
-                            viewState.setState(ViewState.MAIL_ERROR)
-                            return@subscribe
-                        } else if (it.nickname == nickName) {
-                            viewState.setState(ViewState.NICKNAME_ERROR)
-                            return@subscribe
-                        }
-                        userRepo.addUser(GitUser(mail, password, nickName))
-                        router.navigateTo(Screens.openLoginScreen())
-                    }
-                },{
-                    Log.d("@@@",it.stackTrace.toString())
-                }))
     }
 }

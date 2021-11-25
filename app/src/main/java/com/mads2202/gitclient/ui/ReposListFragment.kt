@@ -9,29 +9,26 @@ import com.mads2202.gitclient.R
 import com.mads2202.gitclient.databinding.MainScreenLayoutBinding
 import com.mads2202.gitclient.network.GitHubUsersRepoImpl
 import com.mads2202.gitclient.presenters.MainContact
-import com.mads2202.gitclient.presenters.MainFragmentPresenter
-import com.mads2202.gitclient.ui.adapters.UsersListAdapter
+import com.mads2202.gitclient.presenters.ReposPresenter
+import com.mads2202.gitclient.ui.adapters.GitRepoAdapter
 import com.mads2202.gitclient.util.app
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 
-class MainScreenFragment: MvpAppCompatFragment(),MainContact.MainView {
-    private var binding:MainScreenLayoutBinding?=null
-    private val presenter: MainFragmentPresenter by moxyPresenter {
-        MainFragmentPresenter(
+class ReposListFragment(val url:String): MvpAppCompatFragment(), MainContact.MainView {
+    private var binding: MainScreenLayoutBinding?=null
+    private val presenter: ReposPresenter by moxyPresenter {
+        ReposPresenter(
             AndroidSchedulers.mainThread(),
             GitHubUsersRepoImpl(requireContext().app.api),
-            requireContext().app.router, Screens
+            url
+
         )
     }
     companion object{
-        fun newInstance():MainScreenFragment {
-            val args = Bundle()
-            val fragment = MainScreenFragment()
-            fragment.arguments = args
-            return fragment
-        }
+        val URL="url"
     }
 
     override fun onCreateView(
@@ -41,8 +38,9 @@ class MainScreenFragment: MvpAppCompatFragment(),MainContact.MainView {
     ): View? {
         val view= inflater.inflate(R.layout.main_screen_layout,container,false)
         binding= MainScreenLayoutBinding.bind(view)
-        binding!!.usersList.layoutManager=LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
-        binding!!.usersList.adapter=UsersListAdapter(presenter.usersList,requireContext().app.router)
+        binding!!.usersList.layoutManager=
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL,false)
+        binding!!.usersList.adapter= GitRepoAdapter(presenter.reposList)
         return view
     }
 
@@ -55,12 +53,13 @@ class MainScreenFragment: MvpAppCompatFragment(),MainContact.MainView {
     }
 
     override fun init() {
-        binding!!.usersList.layoutManager=LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
-        binding!!.usersList.adapter=UsersListAdapter(presenter.usersList,requireContext().app.router)
+        binding!!.usersList.layoutManager=
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL,false)
+        binding!!.usersList.adapter= GitRepoAdapter(presenter.reposList)
     }
 
     override fun updateList() {
-        binding!!.usersList.adapter=UsersListAdapter(presenter.usersList,requireContext().app.router)
+        binding!!.usersList.adapter= GitRepoAdapter(presenter.reposList)
         binding!!.usersList.adapter!!.notifyDataSetChanged()
     }
 }
