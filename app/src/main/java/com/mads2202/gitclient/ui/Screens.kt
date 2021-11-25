@@ -7,5 +7,7 @@ object Screens {
     fun openSignUpScreen() = FragmentScreen { SignupFragment.newInstance() }
     fun openForgotPasswordScreen() = FragmentScreen() {ForgotPasswordFragment.newInstance() }
     fun openLoginScreen() = FragmentScreen{LoginFragment.newInstance()}
+    fun openReposScreen(url:String) = FragmentScreen{ ReposListFragment(url) }
+
 
 }

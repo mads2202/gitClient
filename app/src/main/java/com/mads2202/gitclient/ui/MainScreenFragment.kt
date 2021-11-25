@@ -4,17 +4,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mads2202.gitclient.R
 import com.mads2202.gitclient.databinding.MainScreenLayoutBinding
-import com.mads2202.gitclient.eventBus.LoginEvent
+import com.mads2202.gitclient.network.GitHubUsersRepoImpl
+import com.mads2202.gitclient.presenters.MainContact
+import com.mads2202.gitclient.presenters.MainFragmentPresenter
+import com.mads2202.gitclient.ui.adapters.UsersListAdapter
 import com.mads2202.gitclient.util.app
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import moxy.MvpAppCompatFragment
+import moxy.ktx.moxyPresenter
 
-class MainScreenFragment: Fragment() {
+class MainScreenFragment: MvpAppCompatFragment(),MainContact.MainView {
     private var binding:MainScreenLayoutBinding?=null
-    private val disposable:CompositeDisposable= CompositeDisposable()
-    private var counter=0
+    private val presenter: MainFragmentPresenter by moxyPresenter {
+        MainFragmentPresenter(
+            AndroidSchedulers.mainThread(),
+            GitHubUsersRepoImpl(requireContext().app.api),
+            requireContext().app.router, Screens
+        )
+    }
     companion object{
         fun newInstance():MainScreenFragment {
             val args = Bundle()
@@ -31,24 +41,26 @@ class MainScreenFragment: Fragment() {
     ): View? {
         val view= inflater.inflate(R.layout.main_screen_layout,container,false)
         binding= MainScreenLayoutBinding.bind(view)
+        binding!!.usersList.layoutManager=LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
+        binding!!.usersList.adapter=UsersListAdapter(presenter.usersList,requireContext().app.router)
         return view
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        disposable.add(requireContext().app.eventBus.get().subscribe{event->
-            when(event){
-                is LoginEvent -> {
-                    counter+=1
-                    binding!!.loginCounter.text=counter.toString()
-                }
-            }
-        })
-        super.onViewCreated(view, savedInstanceState)
-    }
+
+
 
     override fun onDestroyView() {
-        disposable.dispose()
         binding=null
         super.onDestroyView()
+    }
+
+    override fun init() {
+        binding!!.usersList.layoutManager=LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
+        binding!!.usersList.adapter=UsersListAdapter(presenter.usersList,requireContext().app.router)
+    }
+
+    override fun updateList() {
+        binding!!.usersList.adapter=UsersListAdapter(presenter.usersList,requireContext().app.router)
+        binding!!.usersList.adapter!!.notifyDataSetChanged()
     }
 }

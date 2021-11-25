@@ -42,23 +42,9 @@ class LoginPresenterImpl(val router: Router) : LoginPresenter() {
     }
 
     override fun onLogin(email: String, password: String) {
-        compositeDisposable.add(
-            userRepo.getUsers()
-                .delay(
-                    3,
-                    TimeUnit.SECONDS
-                ) // не совсем понимаю что занчаит имитировать задержку из 2 задания, поэтому решил что значения будут приходить с задержкой тут
-                .flatMap { users -> Observable.fromIterable(users) }
-                .filter { user -> user.email == email }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { user ->
-                    if (user.password == password) {
-                        viewState.rememberCredentials(email, password)
-                        router.navigateTo(Screens.openMainScreen())
-                        viewState.setState(ViewState.SUCCESS)
-                    }
-                })
-        viewState.setState(ViewState.ERROR)
+        viewState.rememberCredentials(email, password)
+        router.navigateTo(Screens.openMainScreen())
+        viewState.setState(ViewState.SUCCESS)
     }
 
     override fun onForgetPassword() {
