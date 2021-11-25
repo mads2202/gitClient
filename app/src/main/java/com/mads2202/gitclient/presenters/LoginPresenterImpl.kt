@@ -1,18 +1,15 @@
 package com.mads2202.gitclient.presenters
 
 import com.github.terrakok.cicerone.Router
-import com.mads2202.gitclient.domen.GitUserDao
-import com.mads2202.gitclient.domen.GitUserDaoImpl
+import com.mads2202.gitclient.domen.retrofit.GitUserDao
+import com.mads2202.gitclient.domen.retrofit.GitUserDaoImpl
 import com.mads2202.gitclient.presenters.LoginContract.*
 import com.mads2202.gitclient.ui.Screens
 import com.mads2202.gitclient.ui.ViewState
 import com.mads2202.gitclient.util.isValidString
 import com.mads2202.gitclient.util.regExMailPattern
 import com.mads2202.gitclient.util.regExPasswordPattern
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 
 

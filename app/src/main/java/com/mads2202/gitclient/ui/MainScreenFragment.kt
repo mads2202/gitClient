@@ -1,13 +1,17 @@
 package com.mads2202.gitclient.ui
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mads2202.gitclient.R
 import com.mads2202.gitclient.databinding.MainScreenLayoutBinding
+import com.mads2202.gitclient.domen.room.Database
 import com.mads2202.gitclient.network.GitHubUsersRepoImpl
+import com.mads2202.gitclient.network.NetworkStatusImpl
 import com.mads2202.gitclient.presenters.MainContact
 import com.mads2202.gitclient.presenters.MainFragmentPresenter
 import com.mads2202.gitclient.ui.adapters.UsersListAdapter
@@ -16,12 +20,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class MainScreenFragment: MvpAppCompatFragment(),MainContact.MainView {
     private var binding:MainScreenLayoutBinding?=null
     private val presenter: MainFragmentPresenter by moxyPresenter {
         MainFragmentPresenter(
             AndroidSchedulers.mainThread(),
-            GitHubUsersRepoImpl(requireContext().app.api),
+            GitHubUsersRepoImpl(requireContext().app.api,NetworkStatusImpl(requireContext()),Database.getInstance()),
             requireContext().app.router, Screens
         )
     }

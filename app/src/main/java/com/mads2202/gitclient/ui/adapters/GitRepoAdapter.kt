@@ -6,7 +6,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mads2202.gitclient.R
 import com.mads2202.gitclient.databinding.GitRepoListItemLayoutBinding
-import com.mads2202.gitclient.domen.GitRepo
+import com.mads2202.gitclient.domen.retrofit.GitRepo
 
 
 class GitRepoAdapter(val reposList:List<GitRepo>): RecyclerView.Adapter<GitRepoAdapter.ReposListViewHolder>() {
