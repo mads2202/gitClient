@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mads2202.gitclient.R
 import com.mads2202.gitclient.databinding.MainScreenLayoutBinding
@@ -13,11 +14,11 @@ import com.mads2202.gitclient.presenters.ReposPresenter
 import com.mads2202.gitclient.ui.adapters.GitRepoAdapter
 import com.mads2202.gitclient.util.app
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 
-class ReposListFragment(val url:String): MvpAppCompatFragment(), MainContact.MainView {
+
+class ReposListFragment(val url: String): MvpAppCompatFragment(), MainContact.MainView {
     private var binding: MainScreenLayoutBinding?=null
     private val presenter: ReposPresenter by moxyPresenter {
         ReposPresenter(
@@ -36,11 +37,18 @@ class ReposListFragment(val url:String): MvpAppCompatFragment(), MainContact.Mai
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view= inflater.inflate(R.layout.main_screen_layout,container,false)
+        val view= inflater.inflate(R.layout.main_screen_layout, container, false)
         binding= MainScreenLayoutBinding.bind(view)
-        binding!!.usersList.layoutManager=
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL,false)
-        binding!!.usersList.adapter= GitRepoAdapter(presenter.reposList)
+        val dividerItemDecoration = DividerItemDecoration(
+            requireContext(),
+            LinearLayoutManager.VERTICAL
+        )
+        binding?.let{
+            it.usersList.layoutManager=
+                LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            it.usersList.adapter= GitRepoAdapter(presenter.reposList)
+            it.usersList.addItemDecoration(dividerItemDecoration)
+        }
         return view
     }
 
@@ -54,7 +62,7 @@ class ReposListFragment(val url:String): MvpAppCompatFragment(), MainContact.Mai
 
     override fun init() {
         binding!!.usersList.layoutManager=
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL,false)
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding!!.usersList.adapter= GitRepoAdapter(presenter.reposList)
     }
 
