@@ -1,11 +1,12 @@
 package com.mads2202.gitclient.presenters
 
-import com.mads2202.gitclient.domen.GitRepo
+import com.mads2202.gitclient.domen.retrofit.GitRepo
+import com.mads2202.gitclient.domen.retrofit.GitUser
 import com.mads2202.gitclient.network.GithubUsersRepo
 import io.reactivex.Scheduler
 import moxy.MvpPresenter
 
-class ReposPresenter(val uiScheduler: Scheduler, val usersRepo: GithubUsersRepo, val url:String) : MvpPresenter<MainContact.MainView>() {
+class ReposPresenter(val uiScheduler: Scheduler, val usersRepo: GithubUsersRepo, val user:GitUser) : MvpPresenter<MainContact.MainView>() {
     var reposList= listOf<GitRepo>()
 
     override fun onFirstViewAttach() {
@@ -15,7 +16,7 @@ class ReposPresenter(val uiScheduler: Scheduler, val usersRepo: GithubUsersRepo,
     }
 
     fun loadData() {
-        usersRepo.getRepositories(url)
+        usersRepo.getRepositories(user)
             .observeOn(uiScheduler)
             .subscribe({ repos ->
                 reposList=repos

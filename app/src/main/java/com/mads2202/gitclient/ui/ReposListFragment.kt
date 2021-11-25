@@ -1,14 +1,19 @@
 package com.mads2202.gitclient.ui
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mads2202.gitclient.R
 import com.mads2202.gitclient.databinding.MainScreenLayoutBinding
+import com.mads2202.gitclient.domen.retrofit.GitUser
+import com.mads2202.gitclient.domen.room.Database
 import com.mads2202.gitclient.network.GitHubUsersRepoImpl
+import com.mads2202.gitclient.network.NetworkStatusImpl
 import com.mads2202.gitclient.presenters.MainContact
 import com.mads2202.gitclient.presenters.ReposPresenter
 import com.mads2202.gitclient.ui.adapters.GitRepoAdapter
@@ -18,13 +23,15 @@ import moxy.MvpAppCompatFragment
 import moxy.ktx.moxyPresenter
 
 
-class ReposListFragment(val url: String): MvpAppCompatFragment(), MainContact.MainView {
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+class ReposListFragment(val user: GitUser): MvpAppCompatFragment(), MainContact.MainView {
     private var binding: MainScreenLayoutBinding?=null
     private val presenter: ReposPresenter by moxyPresenter {
         ReposPresenter(
             AndroidSchedulers.mainThread(),
-            GitHubUsersRepoImpl(requireContext().app.api),
-            url
+            GitHubUsersRepoImpl(requireContext().app.api,NetworkStatusImpl(requireContext()),
+                Database.getInstance()),
+            user
 
         )
     }
